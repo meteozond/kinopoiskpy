@@ -135,6 +135,15 @@ class MovieMainPage(KinopoiskPage):
 
         table_info = content_info.find('table', {'class': 'info'})
         if table_info:
+            keys = [
+                [u'режиссер', 'directors'],
+                [u'сценарий', 'scenarios'],
+                [u'продюсер', 'producers'],
+                [u'оператор', 'operators'],
+                [u'композитор', 'composers'],
+                [u'жанр', 'genres'],
+                [u'страна', 'countries'],
+            ]
             for tr in table_info.findAll('tr'):
                 tds = tr.findAll('td')
                 name = tds[0].text
@@ -142,6 +151,9 @@ class MovieMainPage(KinopoiskPage):
                 if value == '-':
                     continue
 
+                for key, attr in keys:
+                    if name == key:
+                        setattr(instance, attr, self.prepare_str(value).split(","))
                 if name == u'слоган':
                     instance.tagline = self.prepare_str(value)
                 elif name == u'время':
